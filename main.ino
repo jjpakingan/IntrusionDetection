@@ -17,8 +17,11 @@ Author: Jeff
 License: CC BY 4.0
 =================================================================================== */
 
-#ifndef _TINY_THREAD_H_
-#define _TINY_THREAD_H_
+
+
+// -+-+-+-+-+-+-+-+
+// -|T|T|h|r|e|a|d|
+// -+-+-+-+-+-+-+-+
 
 #define TT_DEF(fn) 				\
 unsigned short tt_var_##fn=0; 	\
@@ -55,21 +58,14 @@ void tt_##fn(void)
 
 #define TT_IS_RUNNING(fn) (tt_var_##fn != 0xFFFF)
 
-#endif
 
-
-//-###--------------------------------------------------
-//--#--#----#--####--#------#----#-#####--######--####--
-//--#--##---#-#----#-#------#----#-#----#-#------#------
-//--#--#-#--#-#------#------#----#-#----#-#####---####--
-//--#--#--#-#-#------#------#----#-#----#-#-----------#-
-//--#--#---##-#----#-#------#----#-#----#-#------#----#-
-//-###-#----#--####--######--####--#####--######--####--
-//------------------------------------------------------
-
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|I|n|c|l|u|d|e|s|-|D|e|f|i|n|e|s|-|D|e|c|l|a|r|a|t|i|o|n|s|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 #include <avr/wdt.h>
 #include <TimerObject.h>
+
 
 #define STR_TITLE  "Intrusion Detection System by Jeff v00.80.02"
 
@@ -77,19 +73,6 @@ HardwareSerial *mHardwareSerial;
 
 #define DEBUG_MSG(stringChar)  mHardwareSerial->println(stringChar);
 //#define DEBUG_MSG(stringChar)  ;
-
-
-
-//-######--------------######------------------------------------------------------------------
-//-#-----#-#-#----#----#-----#-######--####--#--------##---#####----##---#####-#--####--#----#-
-//-#-----#-#-##---#----#-----#-#------#----#-#-------#--#--#----#--#--#----#---#-#----#-##---#-
-//-######--#-#-#--#----#-----#-#####--#------#------#----#-#----#-#----#---#---#-#----#-#-#--#-
-//-#-------#-#--#-#----#-----#-#------#------#------######-#####--######---#---#-#----#-#--#-#-
-//-#-------#-#---##----#-----#-#------#----#-#------#----#-#---#--#----#---#---#-#----#-#---##-
-//-#-------#-#----#----######--######--####--######-#----#-#----#-#----#---#---#--####--#----#-
-//---------------------------------------------------------------------------------------------
-
-
 
 #define POWER_LED_PIN		13
 
@@ -107,15 +90,13 @@ HardwareSerial *mHardwareSerial;
 
 #define HUMAN_HEAT_DETECTION	4
 
-//-#######----------------------------#####-----------------------------
-//----#----#-#----#-######-#####-----#-----#-######-#####-#----#-#####--
-//----#----#-##--##-#------#----#----#-------#--------#---#----#-#----#-
-//----#----#-#-##-#-#####--#----#-----#####--#####----#---#----#-#----#-
-//----#----#-#----#-#------#####-----------#-#--------#---#----#-#####--
-//----#----#-#----#-#------#---#-----#-----#-#--------#---#----#-#------
-//----#----#-#----#-######-#----#-----#####--######---#----####--#------
-//----------------------------------------------------------------------
+//#define DEFAULT_ALARM_IN_SECS 5 // 5 seconds alarm
+#define DEFAULT_ALARM_IN_SECS (60*3) // 3 minutes
 
+
+// -+-+-+-+-+-+-+-+-+-+-+-+
+// -|T|i|m|e|r|-|S|e|t|u|p|
+// -+-+-+-+-+-+-+-+-+-+-+-+
 
 #define TIMER_TICK_MSEC		1
 
@@ -136,14 +117,9 @@ void TimerTickCallBack()
     generalAlarmTick++;
     }
 
-//-#-------#######-######-----#######----------------------
-//-#-------#-------#-----#-------#------##----####--#----#-
-//-#-------#-------#-----#-------#-----#--#--#------#---#--
-//-#-------#####---#-----#-------#----#----#--####--####---
-//-#-------#-------#-----#-------#----######------#-#--#---
-//-#-------#-------#-----#-------#----#----#-#----#-#---#--
-//-#######-#######-######--------#----#----#--####--#----#-
-//---------------------------------------------------------
+// -+-+-+-+-+-+-+-+-+
+// -|L|E|D|-|T|a|s|k|
+// -+-+-+-+-+-+-+-+-+
 
 void SetPowerLed(int val)
     {
@@ -168,18 +144,9 @@ TT_DEF(LED_TASK)
     }
 
 
-//----#-----------------------------------#######--------------------------------------
-//---#-#---#--------##---#####--#----#-------#----#####--#--####---####--######-#####--
-//--#---#--#-------#--#--#----#-##--##-------#----#----#-#-#----#-#----#-#------#----#-
-//-#-----#-#------#----#-#----#-#-##-#-------#----#----#-#-#------#------#####--#----#-
-//-#######-#------######-#####--#----#-------#----#####--#-#--###-#--###-#------#####--
-//-#-----#-#------#----#-#---#--#----#-------#----#---#--#-#----#-#----#-#------#---#--
-//-#-----#-######-#----#-#----#-#----#-------#----#----#-#--####---####--######-#----#-
-//-------------------------------------------------------------------------------------
-
-//#define DEFAULT_ALARM_IN_SECS 5 // 5 seconds alarm
-#define DEFAULT_ALARM_IN_SECS (60*3) // 3 minutes
-
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|A|b|s|t|r|a|c|t|-|A|l|a|r|m|-|T|r|i|g|g|e|r|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 class ABaseAlarmTrigger
     {
@@ -199,9 +166,9 @@ class AlarmTriggerv1: public ABaseAlarmTrigger
     public:
 
     void Setup()
-	{
-	pinMode(GENERAL_ALARM_OUT, OUTPUT);
-	}
+		{
+		pinMode(GENERAL_ALARM_OUT, OUTPUT);
+		}
 
     void SetAlarmTrigger()
         {
@@ -219,27 +186,28 @@ class AlarmTriggerv1: public ABaseAlarmTrigger
         }
 
     void KillAlarmTrigger()
-	{
-	bAlarmInProgress=false;
-	}
+		{
+		bAlarmInProgress=false;
+		}
 
     };
 
 
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|A|l|a|r|m|-|N|o|-|O|p|e|r|a|t|i|o|n|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 class DummyAlarmTriggerNoOp: public ABaseAlarmTrigger
     {
     public:
 
     void Setup()
-	{
-
-	}
+		{
+		}
 
     void SetAlarmTrigger()
-        {
-
-        }
+		{
+		}
 
     bool IsAlarmTriggerInProgress()
         {
@@ -251,8 +219,8 @@ class DummyAlarmTriggerNoOp: public ABaseAlarmTrigger
         }
 
     void KillAlarmTrigger()
-	{
-	}
+		{
+		}
 
     };
 
@@ -261,9 +229,9 @@ static DummyAlarmTriggerNoOp dummyalarmTrig = DummyAlarmTriggerNoOp();
 static ABaseAlarmTrigger *mABaseAlarmTrigger=&alarmTrig;
 //static ABaseAlarmTrigger *mABaseAlarmTrigger=&dummyalarmTrig;
 
-
-//
-
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|A|l|a|r|m|-|T|r|i|g|g|e|r|-|T|a|s|k|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 TT_DEF(ALARM_TRIGGER)
     {
@@ -294,7 +262,7 @@ TT_DEF(ALARM_TRIGGER)
 		}
 
 	    DEBUG_MSG("Laser Alarm Exit" + String(alarmCount, DEC)   );
-//	    bAlarmInProgress = false; // kill the alarm
+	    //bAlarmInProgress = false; // kill the alarm
 	    mABaseAlarmTrigger->KillAlarmTrigger();
 	    }
 
@@ -304,20 +272,11 @@ TT_DEF(ALARM_TRIGGER)
     }
 
 
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|A|b|s|t|r|a|c|t|-|L|o|g|i|c|-|B|a|s|e|d|-|S|e|n|s|i|n|g|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-
-//-#---------------------------------######----------------------------------#####---------------------------------------
-//-#--------####---####--#--####-----#-----#---##----####--######-#####-----#-----#-######-#----#--####--#-#----#--####--
-//-#-------#----#-#----#-#-#----#----#-----#--#--#--#------#------#----#----#-------#------##---#-#------#-##---#-#----#-
-//-#-------#----#-#------#-#---------######--#----#--####--#####--#----#-----#####--#####--#-#--#--####--#-#-#--#-#------
-//-#-------#----#-#--###-#-#---------#-----#-######------#-#------#----#----------#-#------#--#-#------#-#-#--#-#-#--###-
-//-#-------#----#-#----#-#-#----#----#-----#-#----#-#----#-#------#----#----#-----#-#------#---##-#----#-#-#---##-#----#-
-//-#######--####---####--#--####-----######--#----#--####--######-#####------#####--######-#----#--####--#-#----#--####--
-//-----------------------------------------------------------------------------------------------------------------------
-
-
-// ------------------------ Abstract Class
 class ABaseLogicBasedSensing
     {
     public:
@@ -326,27 +285,37 @@ class ABaseLogicBasedSensing
     virtual String IntroString()=0;
     };
 
-// ------------------------ Flood Sensing Class
+
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|F|l|o|o|d|-|S|e|n|s|i|n|g|-|C|l|a|s|s|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 class FloodSensingv1:public ABaseLogicBasedSensing
     {
     public:
     bool IsDetected()
-	{
-	return (digitalRead(FLOOD_SENSOR_IN) == HIGH);
-	}
+		{
+		return (digitalRead(FLOOD_SENSOR_IN) == HIGH);
+		}
 
     String GetStringTrigger()
-	{
-	return "Flood Sensor Alarm Triggered";
-	}
+		{
+		return "Flood Sensor Alarm Triggered";
+		}
 
     String IntroString()
-	{
-	return "I am Flood Sensingv1";
-	}
+		{
+		return "I am Flood Sensingv1";
+		}
     };
 
-// ------------------------ HeatDetectionClass
+
+
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|H|e|a|t|-|D|e|t|e|c|t|i|o|n|-|C|l|a|s|s|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+// This is used for PIR detection
 class HeatDetectionv1:public ABaseLogicBasedSensing
     {
     public:
@@ -361,13 +330,16 @@ class HeatDetectionv1:public ABaseLogicBasedSensing
 	    }
 
     String IntroString()
-	{
-	return "I am HeatDetectionv1";
-	}
-
+		{
+		return "I am HeatDetectionv1";
+		}
     };
 
-// ------------------------  Dummy Detection Class
+
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|D|u|m|m|y|-|D|e|t|e|c|t|i|o|n|-|C|l|a|s|s|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 class DummyDetection:public ABaseLogicBasedSensing
     {
     public:
@@ -381,10 +353,10 @@ class DummyDetection:public ABaseLogicBasedSensing
 	    return "Dummy Detection";
 	    }
 
-    String IntroString()
-	{
-	return "I am Dummy Detector";
-	}
+	String IntroString()
+		{
+		return "I am Dummy Detector";
+		}
 
     };
 
@@ -394,11 +366,14 @@ DummyDetection dummyDetection=DummyDetection();
 
 
 #define LOGIC_BASED_SENSING_NUM_ELEM	2
-//ABaseLogicBasedSensing *mABaseLogicBasedSensing[]={&floodSense,&heatDetection};
-ABaseLogicBasedSensing *mABaseLogicBasedSensing[]={&dummyDetection,&dummyDetection};
+ABaseLogicBasedSensing *mABaseLogicBasedSensing[]={&floodSense,&heatDetection};
+//ABaseLogicBasedSensing *mABaseLogicBasedSensing[]={&dummyDetection,&dummyDetection};
 
 
-// ------------------------ Task
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|L|o|g|i|c|-|B|a|s|e|d|-|T|a|s|k|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 TT_DEF(LOGIC_BASED_TASK)
     {
     TT_BEGIN(LOGIC_BASED_TASK);
@@ -435,16 +410,10 @@ TT_DEF(LOGIC_BASED_TASK)
     }
 
 
+// -+-+-+-+-+-+-+-+-+-+-+-+
+// -|L|a|s|e|r|-|A|l|a|r|m|
+// -+-+-+-+-+-+-+-+-+-+-+-+
 
-
-//-#-----------------------------------------#--------------------------------
-//-#---------##----####--######-#####-------#-#---#--------##---#####--#----#-
-//-#--------#--#--#------#------#----#-----#---#--#-------#--#--#----#-##--##-
-//-#-------#----#--####--#####--#----#----#-----#-#------#----#-#----#-#-##-#-
-//-#-------######------#-#------#####-----#######-#------######-#####--#----#-
-//-#-------#----#-#----#-#------#---#-----#-----#-#------#----#-#---#--#----#-
-//-#######-#----#--####--######-#----#----#-----#-######-#----#-#----#-#----#-
-//----------------------------------------------------------------------------
 
 //#define LASER_ELEM_NUM  4
 //const int LASER_INPUT_ARR[] = {4,5,6,7};
@@ -469,15 +438,9 @@ public:
     };
 
 
-
-//-#-----------------------------------------#---------------------------------------
-//-#---------##----####--######-#####-------#-#---#----#---##---#-------####---####--
-//-#--------#--#--#------#------#----#-----#---#--##---#--#--#--#------#----#-#----#-
-//-#-------#----#--####--#####--#----#----#-----#-#-#--#-#----#-#------#----#-#------
-//-#-------######------#-#------#####-----#######-#--#-#-######-#------#----#-#--###-
-//-#-------#----#-#----#-#------#---#-----#-----#-#---##-#----#-#------#----#-#----#-
-//-#######-#----#--####--######-#----#----#-----#-#----#-#----#-######--####---####--
-//-----------------------------------------------------------------------------------
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|L|a|s|e|r|-|A|n|a|l|o|g|-|D|e|t|e|c|t|i|o|n|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
 #define OPTO_AN_IN	A3
@@ -491,60 +454,60 @@ private:
 
 public:
     void toggleLaserOut(int val)
-        {
-        digitalWrite(LASER_CONTROL_OUT, val);
-        digitalWrite(LASER_CONTROL_OUT_INV, (val==HIGH)?LOW:HIGH  );
-        }
+		{
+		digitalWrite(LASER_CONTROL_OUT, val);
+		digitalWrite(LASER_CONTROL_OUT_INV, (val==HIGH)?LOW:HIGH  );
+		}
 
     void enableLaserDetectionDebugMsg()
-	{
-	mDebugMessageEnabled=true;
-	}
+		{
+		mDebugMessageEnabled=true;
+		}
 
 
     void toggleLaserOn()
-	{
-	toggleLaserOut(LOW);
-	}
+		{
+		toggleLaserOut(LOW);
+		}
 
     void toggleLaserOff()
-	{
-	toggleLaserOut(HIGH);
-	}
+		{
+		toggleLaserOut(HIGH);
+		}
 
 
     bool isLaserDetected(int expected)
         {
-	int val;
-	val = analogRead(OPTO_AN_IN);
+		int val;
+		val = analogRead(OPTO_AN_IN);
 
-	if(mDebugMessageEnabled)
-	    DEBUG_MSG("AnalogRead: " + String(val, DEC));
+		if(mDebugMessageEnabled)
+			DEBUG_MSG("AnalogRead: " + String(val, DEC));
 
-	if(val<350)
-	    {
-	    return true;
-	    }
-	return false;
+		if(val<350)
+			{
+			return true;
+			}
+		return false;
         }
 
     void setup()
-	{
-	int ctr;
-	pinMode(LASER_CONTROL_OUT_INV, OUTPUT);
-	pinMode(LASER_CONTROL_OUT, OUTPUT);
+		{
+		int ctr;
+		pinMode(LASER_CONTROL_OUT_INV, OUTPUT);
+		pinMode(LASER_CONTROL_OUT, OUTPUT);
 
 
-	pinMode(OPTO_AN_IN,INPUT);
+		pinMode(OPTO_AN_IN,INPUT);
 
-	pinMode(LASER_DIAGNOSTIC_MODE_IN, INPUT_PULLUP);
+		pinMode(LASER_DIAGNOSTIC_MODE_IN, INPUT_PULLUP);
 
-	}
+		}
 
     bool shouldEnterDiagMode()
-	{
-	return digitalRead(LASER_DIAGNOSTIC_MODE_IN)==LOW;
-	}
+		{
+		return digitalRead(LASER_DIAGNOSTIC_MODE_IN)==LOW;
+		}
     };
 
 const int NOT_IMPT = -1;
@@ -553,6 +516,10 @@ const int NOT_IMPT = -1;
 LaserDetectionAnalogV1 laserDetectionAnalogV1 = LaserDetectionAnalogV1();
 //ABaseLaserDetection *mABaseLaserDetection = &laserDetectionV1;
 ABaseLaserDetection *mABaseLaserDetection = &laserDetectionAnalogV1;
+
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|L|a|s|e|r|-|A|l|a|r|m|-|T|a|s|k|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 TT_DEF(LASER_ALARM_TASK)
     {
@@ -570,8 +537,6 @@ TT_DEF(LASER_ALARM_TASK)
 
 	// turn off laser
 	mABaseLaserDetection->toggleLaserOff();
-
-
 
 	laserAlarmTick = 0;
 	TT_WAIT_UNTIL(LASER_ALARM_TASK, targetTimeCheck(40, laserAlarmTick));
@@ -630,18 +595,9 @@ TT_DEF(LASER_ALARM_TASK)
 
 
 
-
-
-
-
-//--#####-----------------------------
-//-#-----#-######-#####-#----#-#####--
-//-#-------#--------#---#----#-#----#-
-//--#####--#####----#---#----#-#----#-
-//-------#-#--------#---#----#-#####--
-//-#-----#-#--------#---#----#-#------
-//--#####--######---#----####--#------
-//------------------------------------
+// -+-+-+-+-+-+
+// -|S|e|t|u|p|
+// -+-+-+-+-+-+
 
 bool bEnterDiagnosticMode=false;
 
@@ -679,12 +635,12 @@ void setup()
     pinMode(A7, INPUT_PULLUP);
 
 
-    // power
+	// power
     pinMode(POWER_LED_PIN, OUTPUT);
 
-    // alarm
-//    pinMode(FLOOD_SENSOR_ALARM_OUT, OUTPUT);
-//    pinMode(FLOOD_SENSOR_IN, INPUT_PULLUP);
+	// alarm
+	// pinMode(FLOOD_SENSOR_ALARM_OUT, OUTPUT);
+	// pinMode(FLOOD_SENSOR_IN, INPUT_PULLUP);
 
     // laser
     mABaseLaserDetection->setup();
@@ -696,16 +652,10 @@ void setup()
     bEnterDiagnosticMode=mABaseLaserDetection->shouldEnterDiagMode();
     }
 
-//-###------------------------------------------#----------------------------
-//--#--#----#-######-#-#----#-#-#####-######----#--------####---####--#####--
-//--#--##---#-#------#-##---#-#---#---#---------#-------#----#-#----#-#----#-
-//--#--#-#--#-#####--#-#-#--#-#---#---#####-----#-------#----#-#----#-#----#-
-//--#--#--#-#-#------#-#--#-#-#---#---#---------#-------#----#-#----#-#####--
-//--#--#---##-#------#-#---##-#---#---#---------#-------#----#-#----#-#------
-//-###-#----#-#------#-#----#-#---#---######----#######--####---####--#------
-//---------------------------------------------------------------------------
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|I|n|f|i|n|i|t|e|-|L|o|o|p|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-// the loop function runs over and over again forever
 void loop()
     {
     if(bEnterDiagnosticMode)
