@@ -17,44 +17,42 @@ Author: Jeff
 License: CC BY 4.0
 =================================================================================== */
 
-
-
 // -+-+-+-+-+-+-+-+
 // -|T|T|h|r|e|a|d|
 // -+-+-+-+-+-+-+-+
 
-#define TT_DEF(fn) 				\
-unsigned short tt_var_##fn=0; 	\
+#define TT_DEF(fn)              \
+unsigned short tt_var_##fn=0;   \
 void tt_##fn(void)
 
-#define TT_BEGIN(fn)			\
-	switch (tt_var_##fn)	 {	\
-		case 0:					\
-			do {} while(0)
+#define TT_BEGIN(fn)            \
+    switch (tt_var_##fn)     {  \
+        case 0:                 \
+            do {} while(0)
 
-#define TT_END(fn)  } 			\
-	tt_var_##fn = 0xFFFF
+#define TT_END(fn)  }           \
+    tt_var_##fn = 0xFFFF
 
-#define TT_KILL(fn)	\
-	tt_var_##fn = 0xFFFF
+#define TT_KILL(fn) \
+    tt_var_##fn = 0xFFFF
 
-#define TT_INIT(fn)	\
-	tt_var_##fn = 0
+#define TT_INIT(fn) \
+    tt_var_##fn = 0
 
-#define TT_WAIT_WHILE(fn, condition) 								\
-	tt_var_##fn = ((__LINE__ % (65534))+1); case ((__LINE__ % (65534))+1):	\
-	if ((condition)) return
+#define TT_WAIT_WHILE(fn, condition)                                \
+    tt_var_##fn = ((__LINE__ % (65534))+1); case ((__LINE__ % (65534))+1):  \
+    if ((condition)) return
 
-#define TT_WAIT_UNTIL(fn, condition) 								\
-	tt_var_##fn = ((__LINE__ % (65534))+1); case ((__LINE__ % (65534))+1):	\
-	if (!(condition)) return
+#define TT_WAIT_UNTIL(fn, condition)                                \
+    tt_var_##fn = ((__LINE__ % (65534))+1); case ((__LINE__ % (65534))+1):  \
+    if (!(condition)) return
 
 #define TT_SCHED(fn) \
-	if (tt_var_##fn!=0xFFFF) tt_##fn()
+    if (tt_var_##fn!=0xFFFF) tt_##fn()
 
 #define TT_SWITCH(fn) \
-	tt_var_##fn = ((__LINE__ % (65534))+1); return; case ((__LINE__ % (65534))+1): \
-	do {} while(0)
+    tt_var_##fn = ((__LINE__ % (65534))+1); return; case ((__LINE__ % (65534))+1): \
+    do {} while(0)
 
 #define TT_IS_RUNNING(fn) (tt_var_##fn != 0xFFFF)
 
@@ -74,21 +72,21 @@ HardwareSerial *mHardwareSerial;
 #define DEBUG_MSG(stringChar)  mHardwareSerial->println(stringChar);
 //#define DEBUG_MSG(stringChar)  ;
 
-#define POWER_LED_PIN		13
+#define POWER_LED_PIN       13
 
 // Alarm
-#define FLOOD_SENSOR_IN		3
-//#define FLOOD_SENSOR_ALARM_OUT	12
+#define FLOOD_SENSOR_IN     3
+//#define FLOOD_SENSOR_ALARM_OUT    12
 
 // Theft
-#define LASER_IN		7
-#define LASER_CONTROL_OUT	10
-#define LASER_CONTROL_OUT_INV	9
-#define GENERAL_ALARM_OUT	8
+#define LASER_IN        7
+#define LASER_CONTROL_OUT   10
+#define LASER_CONTROL_OUT_INV   9
+#define GENERAL_ALARM_OUT   8
 
-#define LASER_DIAGNOSTIC_MODE_IN	2
+#define LASER_DIAGNOSTIC_MODE_IN    2
 
-#define HUMAN_HEAT_DETECTION	4
+#define HUMAN_HEAT_DETECTION    4
 
 //#define DEFAULT_ALARM_IN_SECS 5 // 5 seconds alarm
 #define DEFAULT_ALARM_IN_SECS (60*3) // 3 minutes
@@ -98,7 +96,7 @@ HardwareSerial *mHardwareSerial;
 // -|T|i|m|e|r|-|S|e|t|u|p|
 // -+-+-+-+-+-+-+-+-+-+-+-+
 
-#define TIMER_TICK_MSEC		1
+#define TIMER_TICK_MSEC     1
 
 TimerObject *timer1 = new TimerObject(TIMER_TICK_MSEC);
 
@@ -131,15 +129,15 @@ TT_DEF(LED_TASK)
     TT_BEGIN(LED_TASK);
     DEBUG_MSG("BEGIN LED TASK");
     while (1)
-	{
-	wdt_reset();
-	SetPowerLed(HIGH); // turn the LED on (HIGH is the voltage level)
-	ledTimerTickCtr = 0;
-	TT_WAIT_UNTIL(LED_TASK, targetTimeCheck(250, ledTimerTickCtr));
-	SetPowerLed(LOW); // turn the LED off by making the voltage LOW
-	ledTimerTickCtr = 0;
-	TT_WAIT_UNTIL(LED_TASK, targetTimeCheck(1500, ledTimerTickCtr));
-	}
+        {
+        wdt_reset();
+        SetPowerLed(HIGH); // turn the LED on (HIGH is the voltage level)
+        ledTimerTickCtr = 0;
+        TT_WAIT_UNTIL(LED_TASK, targetTimeCheck(250, ledTimerTickCtr));
+        SetPowerLed(LOW); // turn the LED off by making the voltage LOW
+        ledTimerTickCtr = 0;
+        TT_WAIT_UNTIL(LED_TASK, targetTimeCheck(1500, ledTimerTickCtr));
+        }
     TT_END(LED_TASK);
     }
 
@@ -158,6 +156,10 @@ class ABaseAlarmTrigger
     virtual void Setup()=0;
     };
 
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// -|A|l|a|r|m|-|T|r|i|g|g|e|r|-|C|l|a|s|s|
+// -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 class AlarmTriggerv1: public ABaseAlarmTrigger
     {
     private:
@@ -166,9 +168,9 @@ class AlarmTriggerv1: public ABaseAlarmTrigger
     public:
 
     void Setup()
-		{
-		pinMode(GENERAL_ALARM_OUT, OUTPUT);
-		}
+        {
+        pinMode(GENERAL_ALARM_OUT, OUTPUT);
+        }
 
     void SetAlarmTrigger()
         {
@@ -186,10 +188,9 @@ class AlarmTriggerv1: public ABaseAlarmTrigger
         }
 
     void KillAlarmTrigger()
-		{
-		bAlarmInProgress=false;
-		}
-
+        {
+        bAlarmInProgress=false;
+        }
     };
 
 
@@ -202,12 +203,12 @@ class DummyAlarmTriggerNoOp: public ABaseAlarmTrigger
     public:
 
     void Setup()
-		{
-		}
+        {
+        }
 
     void SetAlarmTrigger()
-		{
-		}
+        {
+        }
 
     bool IsAlarmTriggerInProgress()
         {
@@ -219,8 +220,8 @@ class DummyAlarmTriggerNoOp: public ABaseAlarmTrigger
         }
 
     void KillAlarmTrigger()
-		{
-		}
+        {
+        }
 
     };
 
@@ -241,33 +242,33 @@ TT_DEF(ALARM_TRIGGER)
     DEBUG_MSG("BEGIN ALARM TRIGGER TASK");
 
     while (1)
-	{
-	if(mABaseAlarmTrigger->IsAlarmTriggerInProgress())
-	    {
-	    static u16 alarmCount;
+    {
+    if(mABaseAlarmTrigger->IsAlarmTriggerInProgress())
+        {
+        static u16 alarmCount;
 
-	    DEBUG_MSG("General Alarm Triggered");
+        DEBUG_MSG("General Alarm Triggered");
 
-	    for(alarmCount =0 ; alarmCount < DEFAULT_ALARM_IN_SECS ; alarmCount++)
-		{
-		mABaseAlarmTrigger->SetGeneralAlarmOut(HIGH);
-		generalAlarmTick = 0;
-		TT_WAIT_UNTIL(ALARM_TRIGGER,
-			targetTimeCheck(250, generalAlarmTick));
-		mABaseAlarmTrigger->SetGeneralAlarmOut(LOW);
-		generalAlarmTick = 0;
-		TT_WAIT_UNTIL(ALARM_TRIGGER,
-			targetTimeCheck(750, generalAlarmTick));
-		//DEBUG_MSG("Laser Alarm Triggered End" + String(alarmCount, DEC)   );
-		}
+        for(alarmCount =0 ; alarmCount < DEFAULT_ALARM_IN_SECS ; alarmCount++)
+        {
+        mABaseAlarmTrigger->SetGeneralAlarmOut(HIGH);
+        generalAlarmTick = 0;
+        TT_WAIT_UNTIL(ALARM_TRIGGER,
+            targetTimeCheck(250, generalAlarmTick));
+        mABaseAlarmTrigger->SetGeneralAlarmOut(LOW);
+        generalAlarmTick = 0;
+        TT_WAIT_UNTIL(ALARM_TRIGGER,
+            targetTimeCheck(750, generalAlarmTick));
+        //DEBUG_MSG("Laser Alarm Triggered End" + String(alarmCount, DEC)   );
+        }
 
-	    DEBUG_MSG("Laser Alarm Exit" + String(alarmCount, DEC)   );
-	    //bAlarmInProgress = false; // kill the alarm
-	    mABaseAlarmTrigger->KillAlarmTrigger();
-	    }
+        DEBUG_MSG("Laser Alarm Exit" + String(alarmCount, DEC)   );
+        //bAlarmInProgress = false; // kill the alarm
+        mABaseAlarmTrigger->KillAlarmTrigger();
+        }
 
-	TT_SWITCH(ALARM_TRIGGER);
-	}
+    TT_SWITCH(ALARM_TRIGGER);
+    }
     TT_END(ALARM_TRIGGER);
     }
 
@@ -294,19 +295,19 @@ class FloodSensingv1:public ABaseLogicBasedSensing
     {
     public:
     bool IsDetected()
-		{
-		return (digitalRead(FLOOD_SENSOR_IN) == HIGH);
-		}
+        {
+        return (digitalRead(FLOOD_SENSOR_IN) == HIGH);
+        }
 
     String GetStringTrigger()
-		{
-		return "Flood Sensor Alarm Triggered";
-		}
+        {
+        return "Flood Sensor Alarm Triggered";
+        }
 
     String IntroString()
-		{
-		return "I am Flood Sensingv1";
-		}
+        {
+        return "I am Flood Sensingv1";
+        }
     };
 
 
@@ -320,19 +321,19 @@ class HeatDetectionv1:public ABaseLogicBasedSensing
     {
     public:
     bool IsDetected()
-	    {
-	    return (digitalRead(HUMAN_HEAT_DETECTION) == HIGH);
-	    }
+        {
+        return (digitalRead(HUMAN_HEAT_DETECTION) == HIGH);
+        }
 
     String GetStringTrigger()
-	    {
-	    return "Human Heat Alarm Triggered";
-	    }
+        {
+        return "Human Heat Alarm Triggered";
+        }
 
     String IntroString()
-		{
-		return "I am HeatDetectionv1";
-		}
+        {
+        return "I am HeatDetectionv1";
+        }
     };
 
 
@@ -344,19 +345,19 @@ class DummyDetection:public ABaseLogicBasedSensing
     {
     public:
     bool IsDetected()
-	    {
-	    return false;
-	    }
+        {
+        return false;
+        }
 
     String GetStringTrigger()
-	    {
-	    return "Dummy Detection";
-	    }
+        {
+        return "Dummy Detection";
+        }
 
-	String IntroString()
-		{
-		return "I am Dummy Detector";
-		}
+    String IntroString()
+        {
+        return "I am Dummy Detector";
+        }
 
     };
 
@@ -365,7 +366,7 @@ HeatDetectionv1 heatDetection=HeatDetectionv1();
 DummyDetection dummyDetection=DummyDetection();
 
 
-#define LOGIC_BASED_SENSING_NUM_ELEM	2
+#define LOGIC_BASED_SENSING_NUM_ELEM    2
 ABaseLogicBasedSensing *mABaseLogicBasedSensing[]={&floodSense,&heatDetection};
 //ABaseLogicBasedSensing *mABaseLogicBasedSensing[]={&dummyDetection,&dummyDetection};
 
@@ -381,31 +382,31 @@ TT_DEF(LOGIC_BASED_TASK)
     DEBUG_MSG("BEGIN FLOOD TASK");
 
     for(ctr=0;ctr<LOGIC_BASED_SENSING_NUM_ELEM;ctr++)
-	{
-	DEBUG_MSG(mABaseLogicBasedSensing[ctr]->IntroString());
-	}
+        {
+        DEBUG_MSG(mABaseLogicBasedSensing[ctr]->IntroString());
+        }
 
     while (1)
-	{
+    {
 
-	for(ctr=0;ctr<LOGIC_BASED_SENSING_NUM_ELEM;ctr++)
-	    {
-	    if(mABaseLogicBasedSensing[ctr]->IsDetected())
-		{
-		DEBUG_MSG(mABaseLogicBasedSensing[ctr]->GetStringTrigger());
-		mABaseAlarmTrigger->SetAlarmTrigger();
-		}
-	    }
+    for(ctr=0;ctr<LOGIC_BASED_SENSING_NUM_ELEM;ctr++)
+        {
+        if(mABaseLogicBasedSensing[ctr]->IsDetected())
+        {
+        DEBUG_MSG(mABaseLogicBasedSensing[ctr]->GetStringTrigger());
+        mABaseAlarmTrigger->SetAlarmTrigger();
+        }
+        }
 
 
-	if(mABaseAlarmTrigger->IsAlarmTriggerInProgress())
-	    {
-	    TT_WAIT_WHILE(LOGIC_BASED_TASK, mABaseAlarmTrigger->IsAlarmTriggerInProgress());
-	    }
+    if(mABaseAlarmTrigger->IsAlarmTriggerInProgress())
+        {
+        TT_WAIT_WHILE(LOGIC_BASED_TASK, mABaseAlarmTrigger->IsAlarmTriggerInProgress());
+        }
 
-	floodSensorTimerTick = 0;
-	TT_WAIT_UNTIL(LOGIC_BASED_TASK, targetTimeCheck(500,floodSensorTimerTick) );
-	}
+    floodSensorTimerTick = 0;
+    TT_WAIT_UNTIL(LOGIC_BASED_TASK, targetTimeCheck(500,floodSensorTimerTick) );
+    }
     TT_END(LOGIC_BASED_TASK);
     }
 
@@ -443,7 +444,7 @@ public:
 // -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-#define OPTO_AN_IN	A3
+#define OPTO_AN_IN  A3
 
 
 class LaserDetectionAnalogV1:public ABaseLaserDetection
@@ -454,60 +455,60 @@ private:
 
 public:
     void toggleLaserOut(int val)
-		{
-		digitalWrite(LASER_CONTROL_OUT, val);
-		digitalWrite(LASER_CONTROL_OUT_INV, (val==HIGH)?LOW:HIGH  );
-		}
+        {
+        digitalWrite(LASER_CONTROL_OUT, val);
+        digitalWrite(LASER_CONTROL_OUT_INV, (val==HIGH)?LOW:HIGH  );
+        }
 
     void enableLaserDetectionDebugMsg()
-		{
-		mDebugMessageEnabled=true;
-		}
+        {
+        mDebugMessageEnabled=true;
+        }
 
 
     void toggleLaserOn()
-		{
-		toggleLaserOut(LOW);
-		}
+        {
+        toggleLaserOut(LOW);
+        }
 
     void toggleLaserOff()
-		{
-		toggleLaserOut(HIGH);
-		}
+        {
+        toggleLaserOut(HIGH);
+        }
 
 
     bool isLaserDetected(int expected)
         {
-		int val;
-		val = analogRead(OPTO_AN_IN);
+        int val;
+        val = analogRead(OPTO_AN_IN);
 
-		if(mDebugMessageEnabled)
-			DEBUG_MSG("AnalogRead: " + String(val, DEC));
+        if(mDebugMessageEnabled)
+            DEBUG_MSG("AnalogRead: " + String(val, DEC));
 
-		if(val<350)
-			{
-			return true;
-			}
-		return false;
+        if(val<350)
+            {
+            return true;
+            }
+        return false;
         }
 
     void setup()
-		{
-		int ctr;
-		pinMode(LASER_CONTROL_OUT_INV, OUTPUT);
-		pinMode(LASER_CONTROL_OUT, OUTPUT);
+        {
+        int ctr;
+        pinMode(LASER_CONTROL_OUT_INV, OUTPUT);
+        pinMode(LASER_CONTROL_OUT, OUTPUT);
 
 
-		pinMode(OPTO_AN_IN,INPUT);
+        pinMode(OPTO_AN_IN,INPUT);
 
-		pinMode(LASER_DIAGNOSTIC_MODE_IN, INPUT_PULLUP);
+        pinMode(LASER_DIAGNOSTIC_MODE_IN, INPUT_PULLUP);
 
-		}
+        }
 
     bool shouldEnterDiagMode()
-		{
-		return digitalRead(LASER_DIAGNOSTIC_MODE_IN)==LOW;
-		}
+        {
+        return digitalRead(LASER_DIAGNOSTIC_MODE_IN)==LOW;
+        }
     };
 
 const int NOT_IMPT = -1;
@@ -530,66 +531,61 @@ TT_DEF(LASER_ALARM_TASK)
     DEBUG_MSG("BEGIN LASER TASK");
 
     while (1)
-	{
-	//DEBUG_MSG("BEGIN LASER SENSE");
-	bTriggerAlarm = false;
-	laserDetectCount = 0;
+    {
+    //DEBUG_MSG("BEGIN LASER SENSE");
+    bTriggerAlarm = false;
+    laserDetectCount = 0;
 
-	// turn off laser
-	mABaseLaserDetection->toggleLaserOff();
+    // turn off laser
+    mABaseLaserDetection->toggleLaserOff();
 
-	laserAlarmTick = 0;
-	TT_WAIT_UNTIL(LASER_ALARM_TASK, targetTimeCheck(40, laserAlarmTick));
+    laserAlarmTick = 0;
+    TT_WAIT_UNTIL(LASER_ALARM_TASK, targetTimeCheck(40, laserAlarmTick));
 
-	if (mABaseLaserDetection->isLaserDetected(NOT_IMPT)) // if not laser detected trigger alarm
-	    {
-	    DEBUG_MSG("I Expect you to be all high");
-	    bTriggerAlarm = true;
-	    goto ALARM_PROCESS;
-	    }
+    if (mABaseLaserDetection->isLaserDetected(NOT_IMPT)) // if not laser detected trigger alarm
+        {
+        DEBUG_MSG("I Expect you to be all high");
+        bTriggerAlarm = true;
+        goto ALARM_PROCESS;
+        }
 
-	// turn on laser
-	mABaseLaserDetection->toggleLaserOn();
+    // turn on laser
+    mABaseLaserDetection->toggleLaserOn();
 
-	laserAlarmTick = 0;
+    laserAlarmTick = 0;
 
-	while(true)
-	    {
-	    if (mABaseLaserDetection->isLaserDetected(NOT_IMPT))
-		{
-		break;
-		}
+    while(true)
+        {
+        if (mABaseLaserDetection->isLaserDetected(NOT_IMPT))
+            {
+            break;
+            }
 
-	    //if(laserDetectCount>10)
-	    if(laserAlarmTick>20) // 20 msec passed
-		{
-		DEBUG_MSG("laserDetectCount>n");
-		bTriggerAlarm = true;
-		goto ALARM_PROCESS; // Note: use GOTO sensibly and sparingly
-		}
+        if(laserAlarmTick>20) // 20 msec passed
+            {
+            DEBUG_MSG("laserDetectCount>n");
+            bTriggerAlarm = true;
+            goto ALARM_PROCESS; // Note: use GOTO sensibly and sparingly
+            }
 
-	    TT_SWITCH(LASER_ALARM_TASK);
+        TT_SWITCH(LASER_ALARM_TASK);
+        }
 
-//	    TT_WAIT_UNTIL(LASER_ALARM_TASK, targetTimeCheck(2, laserAlarmTick));
-	    }
+    ALARM_PROCESS:
 
-	ALARM_PROCESS:
+    mABaseLaserDetection->toggleLaserOff();
+    if (bTriggerAlarm)
+        {
+        DEBUG_MSG("Laser Sensor Alarm Triggered");
+        mABaseAlarmTrigger->SetAlarmTrigger();
+        }
 
-	mABaseLaserDetection->toggleLaserOff();
-	if (bTriggerAlarm)
-	    {
-	    DEBUG_MSG("Laser Sensor Alarm Triggered");
-	    mABaseAlarmTrigger->SetAlarmTrigger();
-	    }
+    if(mABaseAlarmTrigger->IsAlarmTriggerInProgress())
+        {
+        TT_WAIT_WHILE(LASER_ALARM_TASK, mABaseAlarmTrigger->IsAlarmTriggerInProgress());
+        }
 
-	if(mABaseAlarmTrigger->IsAlarmTriggerInProgress())
-	    {
-	    TT_WAIT_WHILE(LASER_ALARM_TASK, mABaseAlarmTrigger->IsAlarmTriggerInProgress());
-	    }
-
-//	laserAlarmTick = 0;
-//	TT_WAIT_UNTIL(LASER_ALARM_TASK, targetTimeCheck(30, laserAlarmTick));
-	}
+    }
     TT_END(LASER_ALARM_TASK);
     }
 
@@ -621,9 +617,9 @@ void setup()
 
     // we make sure all pin is set to input pull up
     for(ctr=2;ctr<=13;ctr++)
-	{
-	pinMode(ctr, INPUT_PULLUP);
-	}
+        {
+        pinMode(ctr, INPUT_PULLUP);
+        }
 
     pinMode(A0, INPUT_PULLUP);
     pinMode(A1, INPUT_PULLUP);
@@ -635,12 +631,8 @@ void setup()
     pinMode(A7, INPUT_PULLUP);
 
 
-	// power
+    // power
     pinMode(POWER_LED_PIN, OUTPUT);
-
-	// alarm
-	// pinMode(FLOOD_SENSOR_ALARM_OUT, OUTPUT);
-	// pinMode(FLOOD_SENSOR_IN, INPUT_PULLUP);
 
     // laser
     mABaseLaserDetection->setup();
@@ -659,30 +651,30 @@ void setup()
 void loop()
     {
     if(bEnterDiagnosticMode)
-	{
-	mABaseAlarmTrigger->SetGeneralAlarmOut(HIGH);
-	delay(500);
-	mABaseAlarmTrigger->SetGeneralAlarmOut(LOW);
+        {
+        mABaseAlarmTrigger->SetGeneralAlarmOut(HIGH);
+        delay(500);
+        mABaseAlarmTrigger->SetGeneralAlarmOut(LOW);
 
-	mABaseLaserDetection->enableLaserDetectionDebugMsg();
-	mABaseLaserDetection->toggleLaserOn();
+        mABaseLaserDetection->enableLaserDetectionDebugMsg();
+        mABaseLaserDetection->toggleLaserOn();
 
-	while(1)
-	    {
-	    wdt_reset();
-	    if(mABaseLaserDetection->isLaserDetected(LOW))
-		{
-		DEBUG_MSG("LASER DETECTED");
-		SetPowerLed(HIGH);
-		}
-	    else
-		{
-		DEBUG_MSG("LASER NOT DETECTED");
-		SetPowerLed(LOW);
-		}
-	    delay(250);
-	    }
-	}
+        while(1)
+            {
+            wdt_reset();
+            if(mABaseLaserDetection->isLaserDetected(LOW))
+                {
+                DEBUG_MSG("LASER DETECTED");
+                SetPowerLed(HIGH);
+                }
+            else
+                {
+                DEBUG_MSG("LASER NOT DETECTED");
+                SetPowerLed(LOW);
+                }
+            delay(250);
+            }
+        }
     TT_SCHED(LED_TASK);
     TT_SCHED(LOGIC_BASED_TASK);
     TT_SCHED(LASER_ALARM_TASK);
